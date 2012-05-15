@@ -11,6 +11,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,15 +24,15 @@ public class KloutScoreService {
 		return null;
 	}
 
-	public static int getScore(String screenName) {
+	public static Integer getScore(String screenName) {
 		String URL = "http://api.klout.com/1/klout.json?users=" + screenName
 				+ "&key=nd9cj8hfe7f9bd5866284dwr";
 		JSONObject result = request(URL);
 		Integer score = null;
 		try {
-			score = result.getInt("kscore");
+			score = result.getJSONArray("users").getJSONObject(0).getInt("kscore");
+			Log.i("Tag Int ", score.toString());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return score;
@@ -40,14 +41,13 @@ public class KloutScoreService {
 	public static JSONObject request(String URL) {
 		JSONObject result = null;
 		final String tag = "Your Logcat tag: ";
-		Log.i(tag, URL);
+		
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet request = new HttpGet(URL);
 		ResponseHandler<String> handler = new BasicResponseHandler();
+		
 		try {
 			result = new JSONObject(httpclient.execute(request, handler));
-			Log.i("JsonObject: ", result.toString());
-			Log.i("JsonObject class: ", result.getClass().toString());
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (JSONException je) {
@@ -55,6 +55,7 @@ public class KloutScoreService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		httpclient.getConnectionManager().shutdown();
 		// Log.i(tag, result);
 		return result;

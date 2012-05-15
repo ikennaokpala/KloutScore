@@ -2,6 +2,8 @@
 <resources>
 
     <string name="instruction">Enter Twitter Username or Handle</string>
+    <string name="score">Oops!</string>
     <string name="app_name">KloutScore</string>
+    <string name="button1">Get Klout Score</string>
 
 </resources>
